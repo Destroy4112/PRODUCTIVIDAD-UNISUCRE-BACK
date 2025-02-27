@@ -1,5 +1,6 @@
+import { Programa } from "src/programa/entities/programa.entity";
 import { Usuario } from "src/usuario/entities/usuario.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'docentes' })
 export class Docente {
@@ -19,8 +20,9 @@ export class Docente {
     @Column()
     telefono: string;
 
-    @Column()
-    programa: string;
+    @ManyToOne(() => Programa, (programa) => programa.docentes)
+    @JoinColumn({ name: 'programa_id' })
+    programa: Programa;
 
     @Column({ nullable: true })
     foto: string;

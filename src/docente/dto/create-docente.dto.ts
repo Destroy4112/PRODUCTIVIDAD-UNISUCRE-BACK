@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
+import { Programa } from "src/programa/entities/programa.entity";
 
 export class CreateDocenteDto {
 
@@ -19,7 +20,7 @@ export class CreateDocenteDto {
     telefono: string;
 
     @IsNotEmpty({ message: 'El programa es requerido' })
-    programa: string;
+    programa: Programa;
 
     @IsOptional()
     foto?: string;

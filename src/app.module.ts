@@ -10,6 +10,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { ValidationModule } from './validation/validation.module';
 import { DocenteModule } from './docente/docente.module';
 import { FacultadModule } from './facultad/facultad.module';
+import { ProgramaModule } from './programa/programa.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { FacultadModule } from './facultad/facultad.module';
     TipoProductoModule,
     DocenteModule,
     FacultadModule,
+    ProgramaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

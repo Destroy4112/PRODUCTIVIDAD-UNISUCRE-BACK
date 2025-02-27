@@ -46,7 +46,7 @@ export class DocenteService {
   }
 
   async findAll() {
-    return await this.repository.find({ relations: ['usuario'] });
+    return await this.repository.find({ relations: ['usuario', 'programa'] });
   }
 
   async count() {

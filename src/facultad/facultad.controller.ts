@@ -1,34 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { FacultadService } from './facultad.service';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/config/jwt-auth.guard';
 import { CreateFacultadDto } from './dto/create-facultad.dto';
 import { UpdateFacultadDto } from './dto/update-facultad.dto';
+import { FacultadGuard } from './facultad.guard';
+import { FacultadService } from './facultad.service';
 
-@Controller('facultad')
+@Controller('api/facultades')
 export class FacultadController {
-  constructor(private readonly facultadService: FacultadService) {}
+  constructor(private readonly facultadService: FacultadService) { }
 
   @Post()
-  create(@Body() createFacultadDto: CreateFacultadDto) {
-    return this.facultadService.create(createFacultadDto);
+  @UseGuards(FacultadGuard, JwtAuthGuard)
+  async create(@Body() createFacultadDto: CreateFacultadDto) {
+    return await this.facultadService.create(createFacultadDto);
   }
 
   @Get()
-  findAll() {
-    return this.facultadService.findAll();
+  async findAll() {
+    return await this.facultadService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.facultadService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFacultadDto: UpdateFacultadDto) {
-    return this.facultadService.update(+id, updateFacultadDto);
+  @Put(':id')
+  @UseGuards(FacultadGuard, JwtAuthGuard)
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateFacultadDto: UpdateFacultadDto) {
+    return await this.facultadService.update(id, updateFacultadDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.facultadService.remove(+id);
+  @UseGuards(FacultadGuard, JwtAuthGuard)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.facultadService.remove(id);
   }
 }

@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsEmail, IsOptional } from 'class-validator';
+import { Programa } from 'src/programa/entities/programa.entity';
 import { CreateDocenteDto } from './create-docente.dto';
 
 export class UpdateDocenteDto extends PartialType(CreateDocenteDto) {
@@ -21,7 +22,7 @@ export class UpdateDocenteDto extends PartialType(CreateDocenteDto) {
     telefono?: string;
 
     @IsOptional()
-    programa?: string;
+    programa?: Programa;
 
     @IsOptional()
     foto?: string;

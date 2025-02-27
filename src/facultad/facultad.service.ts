@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateFacultadDto } from './dto/create-facultad.dto';
 import { UpdateFacultadDto } from './dto/update-facultad.dto';
+import { Facultad } from './entities/facultad.entity';
 
 @Injectable()
 export class FacultadService {
-  create(createFacultadDto: CreateFacultadDto) {
-    return 'This action adds a new facultad';
+  constructor(@InjectRepository(Facultad) private readonly repository: Repository<Facultad>) { }
+
+  async create(createFacultadDto: CreateFacultadDto) {
+    const data = await this.repository.save(this.repository.create(createFacultadDto));
+    return { status: true, message: 'Facultad creada correctamente', data };
   }
 
-  findAll() {
-    return `This action returns all facultad`;
+  async findAll() {
+    return await this.repository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} facultad`;
+  async update(id: number, updateFacultadDto: UpdateFacultadDto) {
+    await this.repository.update(id, updateFacultadDto);
+    return { status: true, message: 'Facultad actualizada correctamente' };
   }
 
-  update(id: number, updateFacultadDto: UpdateFacultadDto) {
-    return `This action updates a #${id} facultad`;
+  async remove(id: number) {
+    await this.repository.delete(id);
+    return { status: true, message: 'Facultad eliminada correctamente' };
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} facultad`;
-  }
+  
 }
