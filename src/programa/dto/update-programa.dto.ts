@@ -6,8 +6,8 @@ import { CreateProgramaDto } from './create-programa.dto';
 export class UpdateProgramaDto extends PartialType(CreateProgramaDto) {
 
     @IsOptional()
-    nombre: string;
+    nombre?: string;
 
     @IsOptional()
-    facultad: Facultad;
+    facultad?: Facultad;
 }

@@ -11,6 +11,7 @@ import { ValidationModule } from './validation/validation.module';
 import { DocenteModule } from './docente/docente.module';
 import { FacultadModule } from './facultad/facultad.module';
 import { ProgramaModule } from './programa/programa.module';
+import { ActaModule } from './acta/acta.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ProgramaModule } from './programa/programa.module';
     DocenteModule,
     FacultadModule,
     ProgramaModule,
+    ActaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

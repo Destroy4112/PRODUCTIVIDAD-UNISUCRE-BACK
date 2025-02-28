@@ -16,7 +16,7 @@ export class AuthService {
     const payload = { id: user.id, usuario: user.correo };
     const token = this.JwtService.sign(payload);
     const credenciales = { id: user.id, usuario: user.correo, rol: user.rol };
-    const usuario = user.administrador;
+    const usuario = user.administrador || user.docente;
     return {
       status: true,
       token,

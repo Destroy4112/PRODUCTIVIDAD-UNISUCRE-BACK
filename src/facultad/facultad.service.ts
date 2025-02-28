@@ -15,7 +15,7 @@ export class FacultadService {
   }
 
   async findAll() {
-    return await this.repository.find();
+    return await this.repository.find({ relations: ['programas'] });
   }
 
   async update(id: number, updateFacultadDto: UpdateFacultadDto) {
@@ -27,5 +27,5 @@ export class FacultadService {
     await this.repository.delete(id);
     return { status: true, message: 'Facultad eliminada correctamente' };
   }
-  
+
 }

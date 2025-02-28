@@ -21,7 +21,7 @@ export class UsuarioService {
   }
 
   async findByCorreo(correo: string) {
-    return await this.repository.findOne({ where: { correo }, relations: ['administrador'] });
+    return await this.repository.findOne({ where: { correo }, relations: ['administrador', 'docente'] });
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto, manager: EntityManager) {
