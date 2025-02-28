@@ -15,7 +15,7 @@ export class TipoProductoService {
   }
 
   async findAll() {
-    return await this.repository.find();
+    return await this.repository.find({ order: { tipo: 'DESC' } });
   }
 
   async update(id: number, updateTipoProductoDto: UpdateTipoProductoDto) {
