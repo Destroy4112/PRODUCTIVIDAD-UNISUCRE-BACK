@@ -20,7 +20,7 @@ export class Docente {
     @Column()
     telefono: string;
 
-    @ManyToOne(() => Programa, (programa) => programa.docentes)
+    @ManyToOne(() => Programa, (programa) => programa.docentes, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'programa_id' })
     programa: Programa;
 

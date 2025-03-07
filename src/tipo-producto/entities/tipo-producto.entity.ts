@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Categoria } from "src/categoria/entities/categoria.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'tipos_producto' })
 export class TipoProducto {
@@ -9,8 +10,9 @@ export class TipoProducto {
     @Column()
     nombre: string;
 
-    @Column()
-    tipo: string;
+    @ManyToOne(() => Categoria, (categoria) => categoria.tiposProductos, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'categoria_id' })
+    categoria: Categoria;
 
     @Column()
     puntos: number;

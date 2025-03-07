@@ -1,8 +1,8 @@
-import { Programa } from "src/programa/entities/programa.entity";
+import { TipoProducto } from "src/tipo-producto/entities/tipo-producto.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'facultades' })
-export class Facultad {
+@Entity({ name: "categorias" })
+export class Categoria {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,12 +10,12 @@ export class Facultad {
     @Column()
     nombre: string;
 
-    @OneToMany(() => Programa, programa => programa.facultad)
-    programas: Programa[]
+    @OneToMany(() => TipoProducto, (tipoProducto) => tipoProducto.categoria)
+    tiposProductos: TipoProducto[];
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
 
     @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date;
+    updatedAt: Date; 
 }

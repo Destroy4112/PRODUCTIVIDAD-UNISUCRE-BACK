@@ -14,8 +14,8 @@ export class TipoProductoService {
     return { status: true, message: 'Tipo creado correctamente', data };
   }
 
-  async findAll() {
-    return await this.repository.find({ order: { tipo: 'DESC' } });
+  async findAll(id: number) {
+    return await this.repository.find({ where: { categoria: { id } } });
   }
 
   async update(id: number, updateTipoProductoDto: UpdateTipoProductoDto) {

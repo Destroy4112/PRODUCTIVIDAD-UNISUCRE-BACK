@@ -11,11 +11,11 @@ export class Programa {
     @Column()
     nombre: string;
 
-    @ManyToOne(() => Facultad, facultad => facultad.programas)
+    @ManyToOne(() => Facultad, facultad => facultad.programas, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'facultad_id' })
     facultad: Facultad;
 
-    @OneToMany(() => Docente, docente => docente.programa, { onDelete: 'CASCADE' })
+    @OneToMany(() => Docente, docente => docente.programa)
     docentes: Docente[];
 
     @CreateDateColumn({ type: 'timestamp' })

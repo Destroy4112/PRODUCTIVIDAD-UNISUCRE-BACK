@@ -15,9 +15,9 @@ export class TipoProductoController {
     return await this.tipoProductoService.create(createTipoProductoDto);
   }
 
-  @Get()
-  async findAll() {
-    return await this.tipoProductoService.findAll();
+  @Get(':id')
+  async findAll(@Param('id', ParseIntPipe) id: number) {
+    return await this.tipoProductoService.findAll(id);
   }
 
   @Put(':id')

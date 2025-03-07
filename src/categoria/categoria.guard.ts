@@ -2,15 +2,15 @@ import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } 
 import { InjectRepository } from "@nestjs/typeorm";
 import { ValidationService } from "src/validation/validation.service";
 import { Not, Repository } from "typeorm";
-import { CreateTipoProductoDto } from "./dto/create-tipo-producto.dto";
-import { UpdateTipoProductoDto } from "./dto/update-tipo-producto.dto";
-import { TipoProducto } from "./entities/tipo-producto.entity";
+import { CreateCategoriaDto } from "./dto/create-categoria.dto";
+import { UpdateCategoriaDto } from "./dto/update-categoria.dto";
+import { Categoria } from "./entities/categoria.entity";
 
 @Injectable()
-export class TipoProductoGuard implements CanActivate {
+export class CategoriaGuard implements CanActivate {
 
     constructor(
-        @InjectRepository(TipoProducto) private readonly repository: Repository<TipoProducto>,
+        @InjectRepository(Categoria) private readonly repository: Repository<Categoria>,
         private readonly validationService: ValidationService,
     ) { }
 
@@ -20,23 +20,23 @@ export class TipoProductoGuard implements CanActivate {
         const { method, body, params } = request;
 
         if (method === 'POST') {
-            const { nombre, tipo } = body;
-            await this.validationService.validateDto(CreateTipoProductoDto, body);
+            const { nombre } = body;
+            await this.validationService.validateDto(CreateCategoriaDto, body);
             const exist = await this.repository.findOne({ where: { nombre } });
             if (exist) {
                 throw new HttpException(
-                    { status: false, errors: ['Ya existe un tipo con esta nombre'] },
+                    { status: false, errors: ['Ya existe una categoría con este nombre'] },
                     HttpStatus.OK
                 );
             }
         } else if (method === 'PUT') {
             const { id } = params;
-            const { nombre, tipo } = body;
-            await this.validationService.validateDto(UpdateTipoProductoDto, body);
+            const { nombre } = body;
+            await this.validationService.validateDto(UpdateCategoriaDto, body);
             const exist = await this.repository.findOne({ where: { nombre, id: Not(id) } });
             if (exist) {
                 throw new HttpException(
-                    { status: false, errors: ['Ya existe un tipo con esta nombre'] },
+                    { status: false, errors: ['Ya existe una categoría con este nombre'] },
                     HttpStatus.OK
                 );
             }
@@ -45,7 +45,7 @@ export class TipoProductoGuard implements CanActivate {
             const existe = await this.repository.findOne({ where: { id } });
             if (!existe) {
                 throw new HttpException(
-                    { status: false, errors: ['El tipo no existe'] },
+                    { status: false, errors: ['La categoría no existe'] },
                     HttpStatus.NOT_FOUND
                 );
             }

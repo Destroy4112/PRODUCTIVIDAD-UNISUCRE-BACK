@@ -12,6 +12,7 @@ import { ProgramaModule } from './programa/programa.module';
 import { TipoProductoModule } from './tipo-producto/tipo-producto.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ValidationModule } from './validation/validation.module';
+import { CategoriaModule } from './categoria/categoria.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ValidationModule } from './validation/validation.module';
     FacultadModule,
     ProgramaModule,
     ActaModule,
+    CategoriaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
