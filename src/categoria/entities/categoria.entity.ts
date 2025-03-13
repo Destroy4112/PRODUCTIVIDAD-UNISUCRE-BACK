@@ -1,3 +1,4 @@
+import { Campo } from "src/campo/entities/campo.entity";
 import { TipoProducto } from "src/tipo-producto/entities/tipo-producto.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -13,9 +14,12 @@ export class Categoria {
     @OneToMany(() => TipoProducto, (tipoProducto) => tipoProducto.categoria)
     tiposProductos: TipoProducto[];
 
+    @OneToMany(() => Campo, (campo) => campo.categoria)
+    campos: Campo[];
+
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
 
     @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date; 
+    updatedAt: Date;
 }

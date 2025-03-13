@@ -6,13 +6,14 @@ import { AdministradorModule } from './administrador/administrador.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CampoModule } from './campo/campo.module';
+import { CategoriaModule } from './categoria/categoria.module';
 import { DocenteModule } from './docente/docente.module';
 import { FacultadModule } from './facultad/facultad.module';
 import { ProgramaModule } from './programa/programa.module';
 import { TipoProductoModule } from './tipo-producto/tipo-producto.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ValidationModule } from './validation/validation.module';
-import { CategoriaModule } from './categoria/categoria.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CategoriaModule } from './categoria/categoria.module';
     ProgramaModule,
     ActaModule,
     CategoriaModule,
+    CampoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

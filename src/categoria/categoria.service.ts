@@ -15,8 +15,21 @@ export class CategoriaService {
   }
 
   async findAll() {
-    return await this.repository.find({ relations: ['tiposProductos'] })
-      .then(result => result.map(item => ({ ...item, tiposProductos: item.tiposProductos.length })));
+    const categorias = await this.repository.find({
+      relations: ['tiposProductos', 'campos', 'tiposProductos.campos']
+    });
+
+    return categorias.map(categoria => {
+      const tieneCamposEnCategoria = categoria.campos.length > 0;
+      const tieneCamposEnTipos = categoria.tiposProductos.some(tipo => tipo.campos.length > 0);
+
+      return {
+        ...categoria,
+        tiposProductos: categoria.tiposProductos.length,
+        tieneCamposEnCategoria,
+        tieneCamposEnTipos
+      };
+    });
   }
 
   async update(id: number, updateCategoriaDto: UpdateCategoriaDto) {
