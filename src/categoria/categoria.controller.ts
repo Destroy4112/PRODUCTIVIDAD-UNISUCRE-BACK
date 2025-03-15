@@ -20,6 +20,11 @@ export class CategoriaController {
     return await this.categoriaService.findAll();
   }
 
+  @Get(':id/campos')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.categoriaService.getFields(id);
+  }
+
   @Put(':id')
   @UseGuards(CategoriaGuard, JwtAuthGuard)
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateCategoriaDto: UpdateCategoriaDto) {

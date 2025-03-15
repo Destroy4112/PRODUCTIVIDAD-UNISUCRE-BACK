@@ -14,6 +14,8 @@ import { ProgramaModule } from './programa/programa.module';
 import { TipoProductoModule } from './tipo-producto/tipo-producto.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ValidationModule } from './validation/validation.module';
+import { ValorCampoModule } from './valor-campo/valor-campo.module';
+import { SolicitudModule } from './solicitud/solicitud.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { ValidationModule } from './validation/validation.module';
     ActaModule,
     CategoriaModule,
     CampoModule,
+    ValorCampoModule,
+    SolicitudModule,
   ],
   controllers: [AppController],
   providers: [AppService],

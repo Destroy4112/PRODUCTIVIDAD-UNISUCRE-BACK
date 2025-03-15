@@ -32,6 +32,15 @@ export class CategoriaService {
     });
   }
 
+  async getFields(categoryId: number) {
+    const categoria = await this.repository.findOne({
+      where: { id: categoryId },
+      relations: ['campos', 'tiposProductos', 'tiposProductos.campos'],
+    })
+
+    return categoria;
+  }
+
   async update(id: number, updateCategoriaDto: UpdateCategoriaDto) {
     await this.repository.update(id, updateCategoriaDto);
     return { status: true, message: 'Categoria actualizado correctamente' };

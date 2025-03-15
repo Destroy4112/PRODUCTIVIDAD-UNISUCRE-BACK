@@ -1,6 +1,7 @@
 import { Programa } from "src/programa/entities/programa.entity";
+import { Solicitud } from "src/solicitud/entities/solicitud.entity";
 import { Usuario } from "src/usuario/entities/usuario.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'docentes' })
 export class Docente {
@@ -30,6 +31,9 @@ export class Docente {
     @OneToOne(() => Usuario, (usuario) => usuario.docente, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'usuario_id' })
     usuario: Usuario;
+
+    @OneToMany(() => Solicitud, (solicitud) => solicitud.docente)
+    solicitudes: Solicitud[];
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;

@@ -10,13 +10,13 @@ export class TipoProducto {
 
     @Column()
     nombre: string;
+    
+    @Column()
+    puntos: number;
 
     @ManyToOne(() => Categoria, (categoria) => categoria.tiposProductos, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'categoria_id' })
     categoria: Categoria;
-
-    @Column()
-    puntos: number;
 
     @OneToMany(() => Campo, (campo) => campo.tipoProducto)
     campos: Campo[];
