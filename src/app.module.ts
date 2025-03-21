@@ -16,6 +16,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { ValidationModule } from './validation/validation.module';
 import { ValorCampoModule } from './valor-campo/valor-campo.module';
 import { SolicitudModule } from './solicitud/solicitud.module';
+import { EstadoSolicitudModule } from './estado-solicitud/estado-solicitud.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { SolicitudModule } from './solicitud/solicitud.module';
     CampoModule,
     ValorCampoModule,
     SolicitudModule,
+    EstadoSolicitudModule,
   ],
   controllers: [AppController],
   providers: [AppService],

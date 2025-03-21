@@ -1,8 +1,10 @@
+import { Acta } from "src/acta/entities/acta.entity";
 import { Categoria } from "src/categoria/entities/categoria.entity";
 import { Docente } from "src/docente/entities/docente.entity";
+import { EstadoSolicitud } from "src/estado-solicitud/entities/estado-solicitud.entity";
 import { TipoProducto } from "src/tipo-producto/entities/tipo-producto.entity";
 import { ValorCampo } from "src/valor-campo/entities/valor-campo.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'solicitudes' })
 export class Solicitud {
@@ -25,6 +27,25 @@ export class Solicitud {
     @OneToMany(() => ValorCampo, (valorCampo) => valorCampo.solicitud)
     valoresCampos: ValorCampo[];
 
-    @Column()
-    fecha: string;
+    @OneToMany(() => EstadoSolicitud, (estadoSolicitud) => estadoSolicitud.solicitud)
+    estados: EstadoSolicitud[];
+
+    @Column({ nullable: true })
+    observacion: string;
+
+    @ManyToOne(() => Acta, (acta) => acta.solicitudes, { nullable: true })
+    @JoinColumn({ name: 'acta_id' })
+    acta: Acta;
+
+    @Column({ nullable: true })
+    puntos: number;
+
+    @Column({ nullable: true })
+    estado: string;
+
+    @CreateDateColumn({ type: 'timestamp' })
+    createdAt: Date
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    updatedAt: Date
 }

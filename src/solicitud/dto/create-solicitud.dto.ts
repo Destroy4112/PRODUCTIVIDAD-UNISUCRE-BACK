@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsOptional } from "class-validator";
 import { Campo } from "src/campo/entities/campo.entity";
 import { Categoria } from "src/categoria/entities/categoria.entity";
 import { Docente } from "src/docente/entities/docente.entity";
@@ -15,6 +15,10 @@ export class CreateSolicitudDto {
     @IsOptional()
     tipoProducto?: TipoProducto;
 
-    @IsNotEmpty({ message: 'Los valores de los campos son requeridos' })
+    @IsArray()
+    @ArrayNotEmpty({ message: 'Los valores de los campos son requeridos' })
     valoresCampos: { campo: Campo, valor: string }[];
+
+    @IsOptional()
+    estado?: string;
 }

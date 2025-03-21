@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Solicitud } from "src/solicitud/entities/solicitud.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: "actas" })
 export class Acta {
@@ -11,6 +12,9 @@ export class Acta {
 
     @Column()
     fecha_acta: string;
+
+    @OneToMany(() => Solicitud, solicitud => solicitud.acta)
+    solicitudes: Solicitud[]
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
