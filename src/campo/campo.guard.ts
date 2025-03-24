@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ValidationService } from "src/validation/validation.service";
-import { Not, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { CreateCampoDto } from "./dto/create-campo.dto";
 import { UpdateCampoDto } from "./dto/update-campo.dto";
 import { Campo } from "./entities/campo.entity";
@@ -32,13 +32,7 @@ export class CampoGuard implements CanActivate {
         }
 
         if (method === 'DELETE') {
-            const existe = await this.repository.findOne({ where: { id } });
-            if (!existe) {
-                throw new HttpException(
-                    { status: false, errors: ['El campo no existe'] },
-                    HttpStatus.NOT_FOUND
-                );
-            }
+            await this.validateDeleteCampo(id);
         }
 
         return true;
@@ -49,9 +43,11 @@ export class CampoGuard implements CanActivate {
             .where('campo.name = :name', { name });
 
         if (tipoProducto) {
-            query.andWhere('campo.tipoProducto = :tipoProducto', { tipoProducto: tipoProducto });
+            query.andWhere('campo.tipoProducto = :tipoProducto', { tipoProducto });
+        } else if (categoria) {
+            query.andWhere('campo.categoria = :categoria', { categoria });
         } else {
-            query.andWhere('campo.categoria = :categoria', { categoria: categoria });
+            query.andWhere('campo.tipoProducto IS NULL AND campo.categoria IS NULL');
         }
 
         if (excludeId) {
@@ -68,5 +64,24 @@ export class CampoGuard implements CanActivate {
         }
 
         return true;
+    }
+
+
+    private async validateDeleteCampo(id: number) {
+        const campo = await this.repository.findOne({ where: { id }, relations: ['valoresCampos'] });
+
+        if (!campo) {
+            throw new HttpException(
+                { status: false, errors: ['El campo no existe'] },
+                HttpStatus.NOT_FOUND
+            );
+        }
+
+        if (campo.valoresCampos && campo.valoresCampos.length > 0) {
+            throw new HttpException(
+                { status: false, errors: ['No se puede eliminar el campo porque tiene valores asociados'] },
+                HttpStatus.OK
+            );
+        }
     }
 }

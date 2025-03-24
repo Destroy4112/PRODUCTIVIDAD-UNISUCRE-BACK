@@ -16,6 +16,9 @@ export class ValorCampo {
     @JoinColumn({ name: "campo_id" })
     campo: Campo;
 
-    @Column("text")
-    valor: string;
+    @Column({ nullable: true })
+    valor?: string;
+
+    @Column({ nullable: true })
+    archivo?: string;
 }
