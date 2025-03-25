@@ -36,6 +36,16 @@ export class SolicitudController {
     return await this.solicitudService.findByCategoria(id);
   }
 
+  @Get('puntos/:id')
+  async getPuntos(@Param('id', ParseIntPipe) id: number) {
+    return await this.solicitudService.countPointsByCategory(id);
+  }
+  
+  @Get('puntos/pendientes/:id')
+  async getPuntosPendientes(@Param('id', ParseIntPipe) id: number) {
+    return await this.solicitudService.countPointsPendientes(id);
+  }
+
   @Put(':id')
   @UseGuards(SolicitudGuard)
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateSolicitudDto: UpdateSolicitudDto) {

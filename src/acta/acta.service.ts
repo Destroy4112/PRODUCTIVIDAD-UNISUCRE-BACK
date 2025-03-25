@@ -17,6 +17,10 @@ export class ActaService {
   async findAll() {
     return await this.repository.find();
   }
+  
+  async count() {
+    return await this.repository.count();
+  }
 
   async update(id: number, updateActaDto: UpdateActaDto) {
     await this.repository.update(id, updateActaDto);

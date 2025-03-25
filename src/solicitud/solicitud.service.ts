@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CategoriaService } from 'src/categoria/categoria.service';
 import { Categoria } from 'src/categoria/entities/categoria.entity';
 import { Docente } from 'src/docente/entities/docente.entity';
+import { EstadoSolicitud } from 'src/estado-solicitud/entities/estado-solicitud.entity';
 import { EstadoSolicitudService } from 'src/estado-solicitud/estado-solicitud.service';
 import { TipoProducto } from 'src/tipo-producto/entities/tipo-producto.entity';
 import { ValorCampoService } from 'src/valor-campo/valor-campo.service';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, IsNull, Not, Repository } from 'typeorm';
 import { CreateSolicitudDto } from './dto/create-solicitud.dto';
 import { UpdateSolicitudDto } from './dto/update-solicitud.dto';
 import { Solicitud } from './entities/solicitud.entity';
@@ -17,6 +19,7 @@ export class SolicitudService {
     @InjectRepository(Solicitud) private solicitudRepository: Repository<Solicitud>,
     private readonly estadoSolicitudService: EstadoSolicitudService,
     private readonly valorCampoService: ValorCampoService,
+    private readonly categoriaService: CategoriaService,
     private readonly dataSource: DataSource
   ) { }
 
@@ -61,9 +64,9 @@ export class SolicitudService {
     }
   }
 
-  async findByDocente(docenteId: number) {
+  async findByDocente(id: number) {
     return await this.solicitudRepository.find({
-      where: { docente: { id: docenteId } },
+      where: { docente: { id } },
       relations: ['categoria', 'tipoProducto', 'estados', 'valoresCampos.campo', 'acta', 'docente'],
       order: { createdAt: 'DESC' },
     });
@@ -77,18 +80,63 @@ export class SolicitudService {
     });
   }
 
+  async countPointsByCategory(id: number) {
+    const solicitudes = await this.solicitudRepository.find({
+      where: { docente: { id }, estado: "Aprobado" },
+      relations: ['categoria'],
+    });
+
+    const allCategories = await this.categoriaService.findAll();
+
+    const puntosPorCategoria = solicitudes.reduce((acc, solicitud) => {
+      const categoriaId = solicitud.categoria.id;
+      if (!acc[categoriaId]) {
+        acc[categoriaId] = {
+          categoria: categoriaId,
+          categoriaNombre: solicitud.categoria.nombre,
+          totalPuntos: 0
+        };
+      }
+      acc[categoriaId].totalPuntos += solicitud.puntos || 0;
+      return acc;
+    }, {} as Record<number, { categoria: number; categoriaNombre: string; totalPuntos: number }>);
+
+    return allCategories.map(categoria => ({
+      categoria: categoria.nombre,
+      puntos: puntosPorCategoria[categoria.id]?.totalPuntos || 0
+    }));
+  }
+
+  async countPointsPendientes(id: number) {
+    let puntosPendientes = 0;
+
+    const solicitudes = await this.solicitudRepository.find({
+      where: { docente: { id }, puntos: IsNull() }, relations: ['tipoProducto'],
+    });
+
+    for (const solicitud of solicitudes) {
+      puntosPendientes += solicitud.tipoProducto.puntos;
+    }
+
+    return puntosPendientes;
+  }
+
   async update(id: number, updateSolicitudDto: UpdateSolicitudDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       const solicitud = await queryRunner.manager.findOne(Solicitud, { where: { id } });
-      solicitud.acta = updateSolicitudDto.acta;
-      solicitud.puntos = updateSolicitudDto.puntos;
-      solicitud.observacion = updateSolicitudDto.observacion;
-      solicitud.estado = updateSolicitudDto.estado;
+      solicitud.acta = updateSolicitudDto.acta ?? solicitud.acta;
+      solicitud.puntos = updateSolicitudDto.puntos ?? solicitud.puntos;
+      solicitud.observacion = updateSolicitudDto.observacion ?? solicitud.observacion;
+
+      if (updateSolicitudDto.estado !== solicitud.estado) {
+        await queryRunner.manager.delete(EstadoSolicitud, { solicitud: { id }, estado: Not('Enviado') });
+        solicitud.estado = updateSolicitudDto.estado;
+        await this.estadoSolicitudService.create({ estado: updateSolicitudDto.estado, solicitud }, queryRunner.manager);
+      }
       await queryRunner.manager.save(solicitud);
-      await this.estadoSolicitudService.create({ estado: updateSolicitudDto.estado, solicitud }, queryRunner.manager);
       await queryRunner.commitTransaction();
       return { status: true, message: 'Solicitud actualizada correctamente' };
     } catch (error) {

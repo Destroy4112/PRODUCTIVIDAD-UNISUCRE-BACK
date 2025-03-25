@@ -20,6 +20,11 @@ export class ActaController {
     return await this.actaService.findAll();
   }
 
+  @Get('cantidad')
+  async count() {
+    return await this.actaService.count();
+  }
+
   @Put(':id')
   @UseGuards(ActaGuard, JwtAuthGuard)
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateActaDto: UpdateActaDto) {

@@ -7,7 +7,7 @@ export class EstadoSolicitud {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Solicitud, (solicitud) => solicitud.estados, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Solicitud, (solicitud) => solicitud.estados, { onDelete: 'CASCADE', nullable: false })
     @JoinColumn({ name: 'solicitud_id' })
     solicitud: Solicitud;
 

@@ -14,4 +14,8 @@ export class EstadoSolicitudService {
     const repository = manager ? manager.getRepository(EstadoSolicitud) : this.estadoSolicitudRepository;
     return await repository.save(repository.create(createEstadoSolicitudDto));
   }
+
+  async findBySolicitud(id: number) {
+    return await this.estadoSolicitudRepository.find({ where: { solicitud: { id } } });
+  }
 }
